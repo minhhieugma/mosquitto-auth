@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  mosquitto:
+    image: iegomez/mosquitto-go-auth:2.1.0-mosquitto_1.6.14
+    volumes:
+      - ./mosquitto.conf:/etc/mosquitto/mosquitto.conf
+
+    ports:
+      - 1883:1883
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13.2
+    restart: always
+    container_name: db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=auth_db
+      - POSTGRES_USER=auth_db_admin
+      - POSTGRES_PASSWORD=123456
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+
+volumes:
+  db_volume:
